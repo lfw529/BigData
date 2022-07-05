@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>随机生成地址</title>
+	<script src="randomCaddress.js"></script>
+</head>
+<body>
+	<div id="content"></div>
+	<script type="text/javascript">
+		var randomCaddressInstance = new randomCaddress();
+		var addrArray = randomCaddressInstance.result(50,1)
+
+		for(var i = 0; i < addrArray.length; ++i) {
+			document.getElementById("content").innerHTML += addrArray[i] + "<br/>";
+
+		}
+	</script>
+</body>
+</html>
