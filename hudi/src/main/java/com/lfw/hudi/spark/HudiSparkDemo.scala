@@ -255,7 +255,7 @@ object HudiSparkDemo {
 
     // 定义变量：表名称、保存路径
     val tableName: String = "tbl_trips_cow"
-    val tablePath: String = "/hudi-data/tbl_trips_cow"
+    val tablePath: String = "/hudi-data/tbl_trips_cow2"
 
     // 构建数据生成器，模拟产生业务数据
     import org.apache.hudi.QuickstartUtils._
@@ -279,7 +279,7 @@ object HudiSparkDemo {
 
 
     // 任务五：删除（Delete）数据
-    deleteData(spark, tableName, tablePath)
+    //deleteData(spark, tableName, tablePath)
 
     // 应用结束，关闭资源
     spark.stop()
