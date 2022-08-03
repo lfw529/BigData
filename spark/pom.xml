@@ -21,6 +21,8 @@
         </dependency>
     </dependencies>
 
+
+    <!--下面配置是用来让maven能够编译、测试、打包scala项目的,如果没有,则打包不会带上scala文件-->
     <build>
         <finalName>WordCount</finalName> <!-- 给定文件名 -->
         <plugins>
@@ -37,6 +39,27 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
 </project>
