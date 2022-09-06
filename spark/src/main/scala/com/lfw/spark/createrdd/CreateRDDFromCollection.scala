@@ -3,7 +3,7 @@ package com.lfw.spark.createrdd
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
-object CreateRdd {
+object CreateRDDFromCollection {
   def main(args: Array[String]): Unit = {
     //1.创建SparkConf并设置App名称
     val conf: SparkConf = new SparkConf().setAppName("SparkCoreTest").setMaster("local[*]")
