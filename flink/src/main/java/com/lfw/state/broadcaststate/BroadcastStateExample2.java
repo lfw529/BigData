@@ -17,8 +17,8 @@ public class BroadcastStateExample2 {
         env.setParallelism(3);
 
         //2.读取流中的数据
-        DataStreamSource<String> propertiesStream = env.socketTextStream("hadoop102", 8888);
-        DataStreamSource<String> dataStream = env.socketTextStream("hadoop102", 9999);
+        DataStreamSource<String> propertiesStream = env.socketTextStream("hadoop102", 7777);
+        DataStreamSource<String> dataStream = env.socketTextStream("hadoop102", 8888);
 
         //3.定义状态并广播
         MapStateDescriptor<String, String> mapStateDescriptor = new MapStateDescriptor<String, String>("map-state", String.class, String.class);

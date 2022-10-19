@@ -46,7 +46,7 @@ public class BufferingSinkExample {
 
         private transient ListState<Event> checkPointedState;
 
-        private List<Event> bufferedElements;
+        private final List<Event> bufferedElements;
 
         public BufferingSink(int threshold) {
             this.threshold = threshold;
