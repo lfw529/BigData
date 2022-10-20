@@ -2,10 +2,7 @@ package com.lfw.hudi.flink;
 
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.EnvironmentSettings;
-import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
-
-import static org.apache.flink.table.api.Expressions.$;
 
 /**
  * 基于Flink SQL Connector实现：实时消费Topic中数据，转换处理后，实时存储Hudi表中
@@ -138,7 +135,7 @@ public class KafkaToHudiLogEvent {
                         "        PARTITIONED BY (days)\n" +
                         "WITH (\n" +
                         "  'connector' = 'hudi',\n" +
-                        "  'path' = 'oss://echoing-emr/hudi/dwd.db/dwd_log_event1',\n" +
+                        "  'path' = 'oss://echoing-hudi/hudi/dwd.db/dwd_log_event',\n" +
                         "  'table.type' = 'COPY_ON_WRITE',\n" +
                         "  'read.tasks' = '1',\n " +
                         "  'write.tasks' = '6',\n " +
@@ -146,17 +143,10 @@ public class KafkaToHudiLogEvent {
                         "  'write.precombine' = 'true',\n " +
                         "  'index.state.ttl' = '0',\n " +
                         "  'write.precombine.field' = 's_timestamp',\n" +
-                        "  'hoodie.metrics.on' = 'true', \n" +
-                        "  'hoodie.metrics.reporter.type' = 'PROMETHEUS_PUSHGATEWAY', \n" +
-                        "  'hoodie.metrics.pushgateway.host' = 'prometheus-pushgateway.monitor.svc', \n" +
-                        "  'hoodie.metrics.pushgateway.port' = '9091', \n" +
-                        "  'hoodie.metrics.pushgateway.delete.on.shutdown' = 'false', \n" +
-                        "  'hoodie.metrics.pushgateway.job.name' = 'mattock_hudi_logevent', \n" +
-                        "  'hoodie.metrics.pushgateway.random.job.name.suffix' = 'false', \n" +
                         "  'hive_sync.enable' = 'true',\n" +
                         "  'hive_sync.mode' = 'jdbc',\n" +
-                        "  'hive_sync.metastore.uris' = 'thrift://10.20.221.242:9083', \n" +
-                        "  'hive_sync.jdbc_url' = 'jdbc:hive2://10.20.221.242:10000', \n" +
+                        "  'hive_sync.metastore.uris' = 'thrift://192.168.6.2:9083', \n" +
+                        "  'hive_sync.jdbc_url' = 'jdbc:hive2://192.168.6.2:10000', \n" +
                         "  'hive_sync.table'= 'dwd_log_event', \n" +
                         "  'hive_sync.db' = 'hudi_dwd', \n" +
                         "  'hoodie.datasource.write.recordkey.field' = 'guid' \n" +
