@@ -2,155 +2,124 @@ package com.lfw.hive;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.hive.ql.exec.UDAFEvaluator;
+import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
-import org.apache.hadoop.hive.ql.exec.UDFArgumentTypeException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.parse.SemanticException;
-import org.apache.hadoop.hive.ql.udf.generic.AbstractGenericUDAFResolver;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
-import org.apache.hadoop.hive.serde2.io.DoubleWritable;
-import org.apache.hadoop.hive.serde2.objectinspector.*;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.DoubleObjectInspector;
+import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFResolver2;
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.LongObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorUtils;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.io.LongWritable;
 
-import java.util.ArrayList;
-
-public class MyUDAF extends AbstractGenericUDAFResolver {
-    static final Log log = LogFactory.getLog(MyUDAF.class.getName());
-
-    @Override
-    public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
-        return getEvaluator(info.getParameters());
-    }
+@Description(name = "count", value = "_FUNC_(*) - Returns the total number of retrieved rows, including rows containing NULL values.\n_FUNC_(expr) - Returns the number of rows for which the supplied expression is non-NULL.\n_FUNC_(DISTINCT expr[, expr...]) - Returns the number of rows for which the supplied expression(s) are unique and non-NULL.")
+public class MyUDAF implements GenericUDAFResolver2 {
+    private static final Log LOG;
 
     public GenericUDAFEvaluator getEvaluator(TypeInfo[] parameters) throws SemanticException {
-        // 在这做类型检查以及选择指定的 Evaluator
-        return new AverageUDAFEvaluator();
+        return new GenericUDAFCountEvaluator();
     }
 
-    public static class AverageUDAFEvaluator extends GenericUDAFEvaluator {
-        // 在这实现 UDAF 逻辑
-        // Iterate 输入
-        private PrimitiveObjectInspector inputOI;
-        // Merge 输入
-        private StructObjectInspector structOI;
-        private LongObjectInspector countFieldOI;
-        private DoubleObjectInspector sumFieldOI;
-        private StructField countField;
-        private StructField sumField;
+    public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo paramInfo) throws SemanticException {
+        TypeInfo[] parameters = paramInfo.getParameters();
 
-        // TerminatePartial 输出
-        private Object[] partialResult;
-        // Terminate 输出
-        private DoubleWritable result;
-
-        @Override
-        public ObjectInspector init(Mode mode, ObjectInspector[] parameters) throws HiveException {
-            assert (parameters.length == 1);
-            super.init(mode, parameters);
-            //初始化输入参数
-            if (mode == Mode.PARTIAL1 || mode == Mode.COMPLETE) {
-                //原始数据
-                inputOI = (PrimitiveObjectInspector) parameters[0];
-            } else {
-                //部分聚合数据
-                structOI = (StructObjectInspector) parameters[0];
-                countField = structOI.getStructFieldRef("count");
-                sumField = structOI.getStructFieldRef("sum");
-                countFieldOI = (LongObjectInspector) countField.getFieldObjectInspector();
-                sumFieldOI = (DoubleObjectInspector) sumField.getFieldObjectInspector();
+        if (parameters.length == 0) {
+            if (!(paramInfo.isAllColumns())) {
+                throw new UDFArgumentException("Argument expected");
             }
-            //初始化输出
-            if (mode == Mode.PARTIAL1 || mode == Mode.PARTIAL2) {
-                //最终结果
-                partialResult = new Object[2];
-                partialResult[0] = new LongWritable(0);
-                partialResult[1] = new DoubleWritable(1);
-                //部分聚合结果
-                //字段类型
-                ArrayList<ObjectInspector> structFieldOIs = new ArrayList<ObjectInspector>();
-                structFieldOIs.add(PrimitiveObjectInspectorFactory.writableLongObjectInspector);
-                structFieldOIs.add(PrimitiveObjectInspectorFactory.writableDoubleObjectInspector);
-                //字段名称
-                ArrayList<String> structFieldNames = new ArrayList<String>();
-                structFieldNames.add("count");
-                structFieldNames.add("sum");
-                return ObjectInspectorFactory.getStandardStructObjectInspector(structFieldNames, structFieldOIs);
-            } else {
-                result = new DoubleWritable(0);
-                return PrimitiveObjectInspectorFactory.writableDoubleObjectInspector;
+        } else {
+            if ((parameters.length > 1) && (!(paramInfo.isDistinct()))) {
+                throw new UDFArgumentException("DISTINCT keyword must be specified");
             }
+            assert (!(paramInfo.isAllColumns())) : "* not supported in expression list";
         }
 
-        //存储临时聚合结果对象
-        static class AverageAggBuffer implements AggregationBuffer {
-            long count;
-            double sum;
+        return new GenericUDAFCountEvaluator().setCountAllColumns(paramInfo.isAllColumns());
+    }
+
+    static {
+        LOG = LogFactory.getLog(MyUDAF.class.getName());
+    }
+
+    public static class GenericUDAFCountEvaluator extends GenericUDAFEvaluator {
+        private boolean countAllColumns;
+        private LongObjectInspector partialCountAggOI;
+        private LongWritable result;
+
+        public GenericUDAFCountEvaluator() {
+            this.countAllColumns = false;
         }
 
-        //返回一个新的聚合对象
-        @Override
-        public AggregationBuffer getNewAggregationBuffer() throws HiveException {
-            AverageAggBuffer buffer = new AverageAggBuffer();
+        public ObjectInspector init(GenericUDAFEvaluator.Mode m, ObjectInspector[] parameters) throws HiveException {
+            super.init(m, parameters);
+            this.partialCountAggOI = PrimitiveObjectInspectorFactory.writableLongObjectInspector;
+
+            this.result = new LongWritable(0L);
+            return PrimitiveObjectInspectorFactory.writableLongObjectInspector;
+        }
+
+        private GenericUDAFCountEvaluator setCountAllColumns(boolean countAllCols) {
+            this.countAllColumns = countAllCols;
+            return this;
+        }
+
+        public GenericUDAFEvaluator.AggregationBuffer getNewAggregationBuffer() throws HiveException {
+            CountAgg buffer = new CountAgg();
             reset(buffer);
             return buffer;
         }
 
-        @Override
-        public void reset(AggregationBuffer agg) throws HiveException {
-            AverageAggBuffer buffer = (AverageAggBuffer) agg;
-            buffer.count = 0L;
-            buffer.sum = 0.0;
+        public void reset(GenericUDAFEvaluator.AggregationBuffer agg) throws HiveException {
+            ((CountAgg) agg).value = 0L;
         }
 
-        @Override
-        public void iterate(AggregationBuffer agg, Object[] parameters) throws HiveException {
-            assert (parameters.length == 1);
-            try {
-                if (parameters[0] != null) {
-                    AverageAggBuffer buffer = (AverageAggBuffer) agg;
-                    buffer.count++;
-                    buffer.sum += PrimitiveObjectInspectorUtils.getDouble(parameters[0], inputOI);
-                }
-            } catch (NumberFormatException e) {
-                throw new HiveException("iterate excetion", e);
-            }
-        }
-
-        @Override
-        public Object terminatePartial(AggregationBuffer agg) throws HiveException {
-            AverageAggBuffer buffer = (AverageAggBuffer) agg;
-            ((LongWritable) partialResult[0]).set(buffer.count);
-            ((DoubleWritable) partialResult[1]).set(buffer.sum);
-            return partialResult;
-        }
-
-        @Override
-        public void merge(AggregationBuffer agg, Object partial) throws HiveException {
-            if (partial == null) {
+        public void iterate(GenericUDAFEvaluator.AggregationBuffer agg, Object[] parameters) throws HiveException {
+            if (parameters == null) {
                 return;
             }
-            AverageAggBuffer buffer = (AverageAggBuffer) agg;
-            Object partialCount = structOI.getStructFieldData(partial, countField);
-            Object partialSum = structOI.getStructFieldData(partial, sumField);
-            buffer.count += countFieldOI.get(partialCount);
-            buffer.sum += sumFieldOI.get(partialSum);
+            if (this.countAllColumns) {
+                assert (parameters.length == 0);
+                ((CountAgg) agg).value += 1L;
+            } else {
+                assert (parameters.length > 0);
+                boolean countThisRow = true;
+                for (Object nextParam : parameters) {
+                    if (nextParam == null) {
+                        countThisRow = false;
+                        break;
+                    }
+                }
+                if (countThisRow)
+                    ((CountAgg) agg).value += 1L;
+            }
         }
 
-        @Override
-        public Object terminate(AggregationBuffer agg) throws HiveException {
-            AverageAggBuffer buffer = (AverageAggBuffer) agg;
-            if (buffer.count == 0) {
-                return null;
+        public void merge(GenericUDAFEvaluator.AggregationBuffer agg, Object partial) throws HiveException {
+            if (partial != null) {
+                long p = this.partialCountAggOI.get(partial);
+                ((CountAgg) agg).value += p;
             }
-            result.set(buffer.sum / buffer.count);
-            return result;
+        }
+
+        public Object terminate(GenericUDAFEvaluator.AggregationBuffer agg) throws HiveException {
+            this.result.set(((CountAgg) agg).value);
+            return this.result;
+        }
+
+        public Object terminatePartial(GenericUDAFEvaluator.AggregationBuffer agg) throws HiveException {
+            return terminate(agg);
+        }
+
+        @GenericUDAFEvaluator.AggregationType(estimable = true)
+        static class CountAgg extends GenericUDAFEvaluator.AbstractAggregationBuffer {
+            long value;
+
+            public int estimate() {
+                return 8;
+            }
         }
     }
 }
