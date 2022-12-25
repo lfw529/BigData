@@ -38,7 +38,9 @@ public class InsertTest {
                 "    'hive_sync.metastore.uris' = 'thrift://hadoop102:9083'\n" +
                 ")"
         );
-        tableEnv.executeSql("INSERT INTO table_hudi VALUES\n" +
+
+        tableEnv.executeSql(
+                "INSERT INTO table_hudi VALUES\n" +
                 "('id1','Danny',23,TIMESTAMP '1970-01-01 00:00:01','par1'),\n" +
                 "('id2','Stephen',33,TIMESTAMP '1970-01-01 00:00:02','par1'),\n" +
                 "('id3','Julian',53,TIMESTAMP '1970-01-01 00:00:03','par2'),\n" +
@@ -46,7 +48,8 @@ public class InsertTest {
                 "('id5','Sophia',18,TIMESTAMP '1970-01-01 00:00:05','par3'),\n" +
                 "('id6','Emma',20,TIMESTAMP '1970-01-01 00:00:06','par3'),\n" +
                 "('id7','Bob',44,TIMESTAMP '1970-01-01 00:00:07','par4'),\n" +
-                "('id8','Han',56,TIMESTAMP '1970-01-01 00:00:08','par4')\n");
+                "('id8','Han',56,TIMESTAMP '1970-01-01 00:00:08','par4')\n"
+        );
     }
 }
 
