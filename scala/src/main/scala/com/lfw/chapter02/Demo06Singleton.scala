@@ -1,6 +1,6 @@
 package com.lfw.chapter02
 
-object Demo04Singleton {
+object Demo06Singleton {
   def main(args: Array[String]): Unit = {
     val s1: Singleton = Singleton.getInstance()
     val s2: Singleton = Singleton.getInstance()
