@@ -23,7 +23,7 @@ public class CustomProducer {
 
         //4.调用 send 方法，发送消息
         for (int i = 0; i < 5; i++) {
-            kafkaProducer.send(new ProducerRecord<>("first","lfw " + i));
+            kafkaProducer.send(new ProducerRecord<>("first", "lfw " + i));
         }
 
         //5.关闭资源

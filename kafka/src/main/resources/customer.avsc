@@ -1,0 +1,22 @@
+{
+  "namespace": "kafka.serialize.avro",
+  "type": "record",
+  "name": "Customer",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ]
+}

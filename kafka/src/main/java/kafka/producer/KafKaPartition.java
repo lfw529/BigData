@@ -25,12 +25,13 @@ public class KafKaPartition {
         //1.创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         //2. 生产数据
-        for (int i = 1; i <= 200; i++) {
+        for (int i = 1; i <= 20; i++) {
             ProducerRecord<String, String> record = new ProducerRecord<>("Hello-Kafka", "hello^_^" + i);
-            //1. 没有 partition, 没有 key ==> 轮询/黏性
+            //1. 没有 partition, 没有 key ==> 黏性分区器 sticky
             try {
                 RecordMetadata meta = producer.send(record).get();
-                System.out.println(meta.topic() + " " + meta.partition() + " " + meta.offset());
+                System.out.println("主题: " + meta.topic() + ", 分区: " + meta.partition() + ", 分区下的偏移量: " + meta.offset() + ", 值: " + record.value());
+
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -54,7 +55,7 @@ public class KafKaPartition {
             //2. 没有 partition, 有 key hash 取余
             try {
                 RecordMetadata meta = producer.send(record).get();
-                System.out.println(meta.topic() + " " + meta.partition() + " " + meta.offset());
+                System.out.println("主题: " + meta.topic() + ", 分区: " + meta.partition() + ", 分区下的偏移量: " + meta.offset() + ", 值: " + record.value());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -78,7 +79,7 @@ public class KafKaPartition {
             //3. 有 partition, 指定哪个分区被发送
             try {
                 RecordMetadata meta = producer.send(record).get();
-                System.out.println(meta.topic() + " " + meta.partition() + " " + meta.offset());
+                System.out.println("主题: " + meta.topic() + ", 分区: " + meta.partition() + ", 分区下的偏移量: " + meta.offset() + ", 值: " + record.value());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
