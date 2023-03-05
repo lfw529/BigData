@@ -7,8 +7,8 @@ import java.util.Map;
 
 /**
  * 1. 实现接口Partitioner
- * 2. 实现3个方法:partition,close,configure
- * 3. 编写partition方法,返回分区号
+ * 2. 实现3个方法:partition, close, configure
+ * 3. 编写partition方法, 返回分区号
  */
 public class MyPartitioner implements Partitioner {
     /**
@@ -26,7 +26,6 @@ public class MyPartitioner implements Partitioner {
     public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
         //获取信息
         String msgValue = value.toString();
-
         //创建 partition
         int partition;
 
@@ -36,7 +35,6 @@ public class MyPartitioner implements Partitioner {
         } else {
             partition = 1;
         }
-
         // 返回分区号
         return partition;
     }
@@ -44,7 +42,6 @@ public class MyPartitioner implements Partitioner {
     // 关闭资源
     @Override
     public void close() {
-
     }
 
     // 配置方法

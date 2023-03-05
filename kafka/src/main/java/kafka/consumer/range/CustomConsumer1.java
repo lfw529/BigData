@@ -19,6 +19,9 @@ public class CustomConsumer1 {
         //配置序列化 必须
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        // 修改分区分配策略
+        //properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, "org.apache.kafka.clients.consumer.RangeAssignor");
+
         //配置消费者组 必须
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
 

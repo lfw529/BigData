@@ -37,7 +37,7 @@ public class CustomProducerTransactions {
             kafkaProducer.commitTransaction();
         } catch (Exception e) {
             //终止交易
-            kafkaProducer.abortTransaction();
+            kafkaProducer.abortTransaction(); //回滚事务
         } finally {
             //5.关闭资源
             kafkaProducer.close();

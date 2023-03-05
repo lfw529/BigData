@@ -5,7 +5,7 @@ import org.apache.kafka.clients.producer.*;
 import java.util.Properties;
 
 public class CustomProducerCallback {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         //1.创建 kafka 生产者的配置对象
         Properties properties = new Properties();
 
@@ -35,8 +35,6 @@ public class CustomProducerCallback {
                     }
                 }
             });
-            // 延迟一会儿会看到数据发往不同分区
-            Thread.sleep(2);
         }
 
         //5.关闭资源

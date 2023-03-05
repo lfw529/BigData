@@ -21,6 +21,8 @@ public class CustomConsumerByHandAsync {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         // 配置消费者组
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
+        //是否自动提交 offset
+        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 
         //3. 创建Kafka消费者
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
