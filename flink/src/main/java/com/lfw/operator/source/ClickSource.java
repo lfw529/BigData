@@ -22,8 +22,8 @@ public class ClickSource implements SourceFunction<Event> {
                     urls[random.nextInt(urls.length)],
                     Calendar.getInstance().getTimeInMillis()
             ));
-            //隔1s生成一个点击事件，方便观测
-            Thread.sleep(1000);
+            //隔100ms生成一个点击事件，方便观测
+            Thread.sleep(100);
         }
     }
 

@@ -36,7 +36,7 @@
     <name>hbase.zookeeper.quorum</name>
     <value>hadoop102,hadoop103,hadoop104</value>
   </property>
-  <!--  V2.1版本，在分布式情况下, 设置为false -->
+  <!--  V2.x版本，在分布式情况下, 设置为false -->
   <property>
     <name>hbase.unsafe.stream.capability.enforce</name>
     <value>false</value>

@@ -45,13 +45,13 @@ public class ItemCountTopN {
                     }
                 });
         SingleOutputStreamOperator<UserBehavior> userBehaviorDS = readTextFile.map(data -> {
-            String[] split = data.split(",");
-            return new UserBehavior(Long.parseLong(split[0]),
-                    Long.parseLong(split[1]),
-                    Integer.parseInt(split[2]),
-                    split[3],
-                    Long.parseLong(split[4]));
-        }).filter(data -> "pv".equals(data.getBehavior()))
+                    String[] split = data.split(",");
+                    return new UserBehavior(Long.parseLong(split[0]),
+                            Long.parseLong(split[1]),
+                            Integer.parseInt(split[2]),
+                            split[3],
+                            Long.parseLong(split[4]));
+                }).filter(data -> "pv".equals(data.getBehavior()))
                 .assignTimestampsAndWatermarks(userBehaviorWatermarkStrategy);
 
         //4.按照商品ID分组

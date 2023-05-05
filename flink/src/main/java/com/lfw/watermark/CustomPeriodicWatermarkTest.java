@@ -42,12 +42,14 @@ public class CustomPeriodicWatermarkTest {
         @Override
         public void onEvent(Event event, long eventTimestamp, WatermarkOutput output) {
             //每来一条数据就调用一次
+            System.out.println("取数据中最大的时间戳");
             maxTs = Math.max(event.timestamp, maxTs);  //更新最大时间戳
         }
 
         @Override
         public void onPeriodicEmit(WatermarkOutput output) {
             //发射水位线，默认200ms调用一次
+            System.out.println("生成WaterMark：" + (maxTs - delayTime - 1L));
             output.emitWatermark(new Watermark(maxTs - delayTime - 1L));
         }
     }

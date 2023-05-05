@@ -28,7 +28,7 @@ public class ProcessingTimeTimerTest {
                         ctx.timerService().registerProcessingTimeTimer(currTs + 10 * 1000L);
                     }
 
-                    @Override //10s 后没来一个数据触发一次
+                    @Override //10s 后每来一个数据触发一次
                     public void onTimer(long timestamp, OnTimerContext ctx, Collector<String> out) throws Exception {
                         out.collect("定时器触发，触发时间：" + new Timestamp(timestamp));
                     }

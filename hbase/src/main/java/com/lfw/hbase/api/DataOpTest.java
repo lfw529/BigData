@@ -1,119 +1,260 @@
 package com.lfw.hbase.api;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.Cell;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.FilterList;
+import org.apache.hadoop.hbase.filter.PrefixFilter;
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.util.MD5Hash;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.List;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+ * 增删改查
+ */
 public class DataOpTest {
     // Connection是一个重量级的对象，不能频繁去创建Connection
     // Connection是线程安全的
-    private Connection connection;
-    private TableName TABLE_NAME = TableName.valueOf("WATER_BILL");
+    private Connection conn;
+    private Table table;
 
     @BeforeTest
     public void beforeTest() throws IOException {
         // 1.使用HbaseConfiguration.create()创建Hbase配置
-        Configuration configuration = HBaseConfiguration.create();
+        Configuration conf = HBaseConfiguration.create();
         // 2.使用ConnectionFactory.createConnection()创建Hbase连接
-        connection = ConnectionFactory.createConnection(configuration);
+        conn = ConnectionFactory.createConnection(conf);
+
+        table = conn.getTable(TableName.valueOf("lfw_01:students"));
     }
 
+    /**
+     * 插入数据
+     * <p>
+     * 测试前先创建一个表：
+     * create 'lfw_01:students', 'base_info', 'extra_info'
+     */
     @Test
     public void putTest() throws IOException {
-        //1.使用 HBase 连接获取 HTable
-        Table table = connection.getTable(TABLE_NAME);
-        //2.构建 ROWKEY、列族名、列名
-        String rowkey = "4944191";
-        String columnFamily = "C1";
-        String columnName = "NAME";
-        String columnNameADDRESS = "ADDRESS";
-        String columnNameSEX = "SEX";
-        String columnNamePAY_DATE = "PAY_DATE";
-        String columnNameNUM_CURRENT = "NUM_CURRENT";
-        String columnNameNUM_PREVIOUS = "NUM_PREVIOUS";
-        String columnNameNUM_USAGE = "NUM_USAGE";
-        String columnNameTOTAL_MONEY = "TOTAL_MONEY";
-        String columnNameRECORD_DATE = "RECORD_DATE";
-        String columnNameLATEST_DATE = "LATEST_DATE";
+        //读数据源
+        BufferedReader br = new BufferedReader(new FileReader("data/students.txt"));
+        String line;
 
-        // value:
-        //3.构建 Put 对象（对应 put 命令）
-        Put put = new Put(Bytes.toBytes(rowkey));
+        ArrayList<Put> puts = new ArrayList<>();
 
-        //4.添加姓名列
-        //使用 alt + 鼠标左键列编辑，按住 ctrl + shift + 左箭头/右箭头选择单词
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnName), Bytes.toBytes("登卫红"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameADDRESS), Bytes.toBytes("贵州省铜仁市德江县7单元267室"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameSEX), Bytes.toBytes("男"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNamePAY_DATE), Bytes.toBytes("2020-05-10"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameNUM_CURRENT), Bytes.toBytes("308.1"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameNUM_PREVIOUS), Bytes.toBytes("283.1"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameNUM_USAGE), Bytes.toBytes("25"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameTOTAL_MONEY), Bytes.toBytes("150"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameRECORD_DATE), Bytes.toBytes("2020-04-25"));
-        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(columnNameLATEST_DATE), Bytes.toBytes("2020-06-09"));
+        long start = System.currentTimeMillis();
+        while ((line = br.readLine()) != null) {
+            String[] split = line.split(",");
 
-        //5.使用 HTable 表对象执行 put 操作
-        table.put(put);
+            // 000001,zhangsan,18,male,beijing,18000,2018-07-01
+            String rkMD5 = MD5Hash.getMD5AsHex(split[0].getBytes());  //对 rowkey 进行MD5加密
 
-        // 6.关闭 HTable 表对象
-        // HTable是一个轻量级的对象，可以经常创建
-        // HTable它是一个非线程安全的API
-        table.close();
-    }
+            //构造一个用于封装KeyValue数据的put对象
+            Put put = new Put(Bytes.toBytes(rkMD5));
+            put.addColumn(Bytes.toBytes("base_info"), Bytes.toBytes("name"), Bytes.toBytes(split[1]));
+            put.addColumn(Bytes.toBytes("base_info"), Bytes.toBytes("age"), Bytes.toBytes(Integer.parseInt(split[2])));
+            put.addColumn(Bytes.toBytes("base_info"), Bytes.toBytes("gender"), Bytes.toBytes(split[3]));
+            put.addColumn(Bytes.toBytes("extra_info"), Bytes.toBytes("city"), Bytes.toBytes(split[4]));
+            put.addColumn(Bytes.toBytes("extra_info"), Bytes.toBytes("salary"), Bytes.toBytes(Integer.parseInt(split[5])));
+            put.addColumn(Bytes.toBytes("extra_info"), Bytes.toBytes("graduate"), Bytes.toBytes(split[6]));
 
-    @Test
-    public void getTest() throws IOException {
-        //1.获取 HTable
-        Table table = connection.getTable(TABLE_NAME);
-        //2.使用rowkey构建Get对象
-        Get get = new Get(Bytes.toBytes("4944191"));
-        //3.执行get请求
-        Result result = table.get(get);
-        //4.获取所有单元格
-        //列出所有的单元格
-        List<Cell> cellList = result.listCells();
-        //5.打印rowkey
-        byte[] rowkey = result.getRow();
-        System.out.println(Bytes.toString(rowkey));
-        //6.迭代单元格列表
-        for (Cell cell : cellList) {
-            //将字节数组转换为字符串
-            //获取列族名称
-            String cf = Bytes.toString(cell.getFamilyArray(), cell.getFamilyOffset(), cell.getFamilyLength());
-            //获取列的名称
-            String columnName = Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength());
-            //获取值
-            String value = Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength());
-            System.out.println(cf + ":" + columnName + " -> " + value);
+            // 把封装好的一行数据，先暂存在一个list中
+            puts.add(put);
+
+            // 判断list中的条数是否满足批次大小（100条一批）
+            if (puts.size() >= 100) {
+                // 插入数据
+                table.put(puts);
+                // 清空list
+                puts.clear();
+            }
         }
-        //7.关闭表
+
+        //最后一批
+        if (puts.size() > 0) {
+            table.put(puts);
+        }
+
+        long end = System.currentTimeMillis();
+
+        // 关闭连接
+        table.close();
+        conn.close();
+
+        System.out.println("总耗时： " + (end - start));
+    }
+
+    /**
+     * 取一个指定的 KeyValue
+     */
+    @Test
+    public void getKeyValueTest() throws IOException {
+        //MD5 解码
+        String rowKey = MD5Hash.getMD5AsHex(Bytes.toBytes("000190"));
+
+        //使用 rowkey 构建 get 对象
+        Get getParam = new Get(Bytes.toBytes(rowKey));
+        //选择要获取的列，封装到 getParam 中
+        getParam.addColumn(Bytes.toBytes("base_info"), Bytes.toBytes("age"));
+        //提取 key:value
+        Result result = table.get(getParam);
+        byte[] value = result.getValue(Bytes.toBytes("base_info"), Bytes.toBytes("age"));
+        int age = Bytes.toInt(value);
+        System.out.println(age);
+
+        table.close();
+
+    }
+
+    /**
+     * get 单行中的指定列族的所有KeyValue数据
+     */
+    @Test
+    public void getFamilyTest() throws IOException {
+        String rowKey = MD5Hash.getMD5AsHex(Bytes.toBytes("000010"));
+
+        Get getParam = new Get(Bytes.toBytes(rowKey));
+        getParam.addFamily(Bytes.toBytes("base_info"));
+
+        Result result = table.get(getParam);
+        //构建一个单元格扫描器
+        CellScanner cellScanner = result.cellScanner();
+        //advance:每次向前移动一个单元格
+        while (cellScanner.advance()) {
+            //一个 cell 就代表一个 KeyValue
+            Cell cell = cellScanner.current();
+
+            //rowkey获取
+            byte[] rowKeyBytes = CellUtil.cloneRow(cell);
+            //列族获取
+            byte[] familyBytes = CellUtil.cloneFamily(cell);
+            //列 key 获取
+            byte[] qualifierBytes = CellUtil.cloneQualifier(cell);
+            //列 value 获取
+            byte[] valueBytes = CellUtil.cloneValue(cell);
+
+            String qualifier = Bytes.toString(qualifierBytes);
+            String value = "";
+            // 只有年龄需要转换成 string
+            if ("age".equals(qualifier)) {
+                value = Bytes.toInt(valueBytes) + "";
+            } else {
+                value = Bytes.toString(valueBytes);
+            }
+
+            //打印输出
+            System.out.println(Bytes.toString(rowKeyBytes) + ","
+                    + Bytes.toString(familyBytes) + ","
+                    + qualifier + ","
+                    + value
+            );
+
+            table.close();
+        }
+    }
+
+    /**
+     * 扫描指定行范围的数据
+     */
+    @Test
+    public void scanRowsTest() throws IOException {
+        //构建一个 扫描器 对象，对应scan指令
+        Scan scan = new Scan();
+        //MD5解码
+        String startMd5 = MD5Hash.getMD5AsHex(Bytes.toBytes("000190"));
+        String stopMd5 = MD5Hash.getMD5AsHex(Bytes.toBytes("000200"));
+        //设置了扫描的起始行和结束行（默认含首不含尾）
+        scan.withStartRow(Bytes.toBytes(startMd5));
+        //inclusive: 扫描时是否包含停止行，即最后一行。
+//        scan.withStopRow(Bytes.toBytes(stopMd5), false);
+
+        // 设置总共要扫描的行数
+        scan.setLimit(10);
+
+        ResultScanner scanner = table.getScanner(scan);
+        // 扫描时的行迭代器
+        Iterator<Result> iterator = scanner.iterator();
+        printData(iterator);
+
         table.close();
     }
 
-    @Test
-    public void deleteTest() throws IOException {
-        // 1.获取HTable对象
-        Table table = connection.getTable(TABLE_NAME);
-        // 2.根据rowkey构建delete对象
-        Delete delete = new Delete(Bytes.toBytes("4944191"));
-        // 3.行delete请求
-        table.delete(delete);
-        // 4.关闭表
-        table.close();
+    /**
+     * 用于打印 scan 结果的工具方法
+     */
+    private static void printData(Iterator<Result> iterator) throws IOException {
+        while (iterator.hasNext()) {  // 行迭代
+            // 迭代到一行
+            Result result = iterator.next();
+            // 拿到行中的cell单元格的迭代器
+            CellScanner cellScanner = result.cellScanner();
+            // 用单元格迭代器，迭代行中的每一个 cell(单元格，KeyValue)
+            while (cellScanner.advance()) {   //  行内的keyValue迭代
+                Cell cell = cellScanner.current();
+
+                String rowKey = Bytes.toString(CellUtil.cloneRow(cell));
+                String family = Bytes.toString(CellUtil.cloneFamily(cell));
+                String qualifier = Bytes.toString(CellUtil.cloneQualifier(cell));
+                String value = "";
+                if (qualifier.equals("age") || qualifier.equals("salary")) {
+                    value = Bytes.toInt(CellUtil.cloneValue(cell)) + "";
+                } else {
+                    value = Bytes.toString(CellUtil.cloneValue(cell));
+                }
+
+                System.out.println(rowKey + "," + family + "," + qualifier + "," + value);
+            }
+        }
     }
+
+    /**
+     * 扫描多行数据，并带过滤条件
+     */
+    @Test
+    public void scanRowsWithFilterTest() throws IOException {
+        Scan scan = new Scan();
+        //从这个 rowkey 开始扫描十行
+        scan.withStartRow(Bytes.toBytes("eccb22fe1acf4027649239c7d6383d78"), true);
+        scan.setLimit(10);
+
+        // 行键前缀过滤器：选择 ecc 开头的行键
+        Filter filter1 = new PrefixFilter(Bytes.toBytes("ecc"));  // 行键前缀过滤器
+
+        // 列值过滤器（匹配到条件的行，整行数据都将返回）
+        SingleColumnValueFilter filter2 = new SingleColumnValueFilter(Bytes.toBytes("extra_info"), Bytes.toBytes("city"), CompareOperator.EQUAL, Bytes.toBytes("南京"));
+
+        ArrayList<Filter> filterList = new ArrayList<>();
+        filterList.add(filter1);
+        filterList.add(filter2);
+
+        // 将上面的2个过滤器，组成一个 MUST_PASS_ALL 关系的过滤器组
+        FilterList filters = new FilterList(FilterList.Operator.MUST_PASS_ALL, filterList);
+        //FilterListWithAND filters = new FilterListWithAND(filterList);
+
+        // 给scan参数设置过滤器条件
+        scan.setFilter(filters);
+
+        ResultScanner scanner = table.getScanner(scan);
+        Iterator<Result> iterator = scanner.iterator();  // 拿到行迭代器
+
+        printData(iterator);  // 迭代，并打印数据
+
+    }
+
 
     @AfterTest
     public void afterTest() throws IOException {
-        connection.close();
+        conn.close();
     }
 }

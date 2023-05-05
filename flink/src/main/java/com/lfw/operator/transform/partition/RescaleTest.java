@@ -1,11 +1,15 @@
 package com.lfw.operator.transform.partition;
 
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.RichParallelSourceFunction;
 
 public class RescaleTest {
     public static void main(String[] args) throws Exception {
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        // 创建执行环境
+        Configuration configuration = new Configuration();
+        configuration.setInteger("rest.port", 8081);
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration);
         env.setParallelism(1);
 
         // 这里使用了并行数据源的富函数版本

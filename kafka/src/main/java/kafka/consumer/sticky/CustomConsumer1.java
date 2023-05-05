@@ -21,9 +21,9 @@ public class CustomConsumer1 {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
         // 修改分区分配策略
-        ArrayList<String> startegys = new ArrayList<>();
-        startegys.add("org.apache.kafka.clients.consumer.StickyAssignor");
-        properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, startegys);
+        ArrayList<String> strategies = new ArrayList<>();
+        strategies.add("org.apache.kafka.clients.consumer.StickyAssignor");
+        properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, strategies);
 
         //配置消费者组 必须
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
@@ -35,6 +35,8 @@ public class CustomConsumer1 {
         ArrayList<String> topics = new ArrayList<>();
         topics.add("first");
         kafkaConsumer.subscribe(topics);
+        //取消订阅
+//        kafkaConsumer.unsubscribe();
 
         // 拉取数据打印
         while (true) {

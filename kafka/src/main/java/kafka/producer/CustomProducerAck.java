@@ -7,6 +7,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
+/**
+ *  ACK 级别设置
+ */
 public class CustomProducerAck {
     public static void main(String[] args) throws InterruptedException {
         // 1. 创建kafka生产者的配置对象

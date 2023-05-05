@@ -1,0 +1,4 @@
+1,zs,18,male
+2,ls,28,female
+2,ls,28,fe,male     -- 这种不能正常解析的行数据，会被忽略
+3,ww,38,male

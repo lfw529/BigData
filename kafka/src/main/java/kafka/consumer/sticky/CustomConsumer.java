@@ -21,9 +21,10 @@ public class CustomConsumer {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
         // 修改分区分配策略
-        ArrayList<String> startegys = new ArrayList<>();
-        startegys.add("org.apache.kafka.clients.consumer.StickyAssignor");
-        properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, startegys);
+        ArrayList<String> strategies = new ArrayList<>();
+        //尽可能保留原来的分配方案，对改变的部分进行重新分配
+        strategies.add("org.apache.kafka.clients.consumer.StickyAssignor");
+        properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, strategies);
 
         //配置消费者组 (组名任意起名) 必须
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test");

@@ -4,6 +4,9 @@ import org.apache.kafka.clients.producer.*;
 
 import java.util.Properties;
 
+/**
+ * 异步发送
+ */
 public class CustomProducerCallback {
     public static void main(String[] args) {
         //1.创建 kafka 生产者的配置对象

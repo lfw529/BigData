@@ -1,6 +1,14 @@
-package com {
+package com.lfw.chapter02
 
-  import com.lfw.chapter02.Inner //外部类访问内部类的属性，需要导包
+import com.lfw.chapter02.Inner //外部类访问内部类的属性，需要导包
+
+  // 在同一文件中定义不同的包
+object Demo01Package {
+  def main(args: Array[String]): Unit = {
+    import com.lfw.chapter02.Inner //外部环境下需要导包
+    println(Inner.in) //in
+  }
+}
 
   //在外层包中定义单例对象
   object Outer {
@@ -11,9 +19,7 @@ package com {
     }
   }
 
-  package lfw {
-    package chapter02 {
-      //内层包中定义单例对象
+//内层包中定义单例对象
       object Inner {
         var in: String = "in"
 
@@ -24,14 +30,3 @@ package com {
           println(Outer.out) //outer
         }
       }
-    }
-  }
-}
-
-// 在同一文件中定义不同的包
-object Demo01Package {
-  def main(args: Array[String]): Unit = {
-    import com.lfw.chapter02.Inner //外部环境下需要导包
-    println(Inner.in) //in
-  }
-}

@@ -8,7 +8,7 @@ import java.util.Random;
 public class ParallelSourceTest {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
+        //只有带有 Parallel 的数据源才能设置并行度
         env.addSource(new CustomSource()).setParallelism(2).print();
 
         env.execute();

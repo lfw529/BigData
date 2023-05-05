@@ -6,6 +6,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Properties;
 
+/**
+ * 发送即忘
+ */
 public class CustomProducer {
     public static void main(String[] args) throws InterruptedException {
         //1.创建 kafka 生产者的配置对象
