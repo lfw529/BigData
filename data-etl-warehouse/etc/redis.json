@@ -1,0 +1,42 @@
+{
+  "user" : {
+    "ip": "r-uf6wt2ifbgmcoph3kr.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "feature" : {
+    "ip": "r-uf6opvbo4k4zppgu54.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "recsys" : {
+    "ip": "r-uf63uokdoe3asxii1z.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "ups" : {
+    "ip": "r-uf6fkn34p9i5di4x8h.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "armory" : {
+    "ip": "r-uf6i40chsjl8uf558x.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "c2c" : {
+    "ip": "r-uf67drkm7aorpxppv5.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "recsys-b2c" : {
+    "ip": "r-uf68f7b77aket7nh6e.redis.rds.aliyuncs.com",
+    "port": "6379",
+    "auth": "Wdad2o19eta"
+  },
+  "dev-redis" : {
+    "ip": "10.100.10.36",
+    "port": "6379",
+    "auth": ""
+  }
+}
