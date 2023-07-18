@@ -26,5 +26,10 @@
       <option name="name" value="confluent" />
       <option name="url" value="http://packages.confluent.io/maven/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="spring-plugin" />
+      <option name="name" value="spring-plugin" />
+      <option name="url" value="https://repo.spring.io/plugins-release/" />
+    </remote-repository>
   </component>
 </project>

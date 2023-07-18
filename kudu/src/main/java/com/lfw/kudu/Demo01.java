@@ -1,50 +1,43 @@
 package com.lfw.kudu;
 
+import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.connectors.kudu.table.KuduCatalog;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.EnvironmentSettings;
+import org.apache.flink.table.api.Table;
+import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 
 public class Demo01 {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
 
-        EnvironmentSettings environmentSettings = EnvironmentSettings.inStreamingMode();
-        StreamTableEnvironment tenv = StreamTableEnvironment.create(env, environmentSettings);
+        //环境创建之初，底层会根据自动初始化一个元数据空间实现对象 (default_catalog => GenericInMemoryCatalog)
+        StreamTableEnvironment tenv = StreamTableEnvironment.create(env);
+
+//        String KUDU_MASTER = "bdmaster-t-01:7051, bdmaster-t-02:7051";
+//        KuduCatalog catalog = new KuduCatalog(KUDU_MASTER);
+//
+//        tenv.registerCatalog("Kudu", catalog);
+//
+//        tenv.useCatalog("Kudu");
+//
 
         tenv.executeSql(
-                "create table t_kudu                                         \n" +
-                        "    id BIGINT,   \n" +
-                        "    end_time STRING,   \n" +
-                        "    start_time STRING,   \n" +
-                        "    transferindes STRING,   \n" +
-                        "    transferoutdes STRING,   \n" +
-                        "    valid BIGINT,   \n" +
-                        "    version BIGINT,   \n" +
-                        "    position_id BIGINT,   \n" +
-                        "    staff_id BIGINT,   \n" +
-                        "    mainposiflag BIGINT,   \n" +
-                        "    parentpwid BIGINT,   \n" +
-                        "    editdate STRING,   \n" +
-                        "    edit_date STRING,   \n" +
-                        "    main_posi_flag BIGINT,   \n" +
-                        "    parent_pw_id BIGINT,   \n" +
-                        "    transfer_in_des STRING,   \n" +
-                        "    transfer_out_des STRING,   \n" +
-                        "    transfer_in_deal_time STRING,   \n" +
-                        "    transfer_out_deal_time STRING,   \n" +
-                        "    transfer_in_dealer_id BIGINT,   \n" +
-                        "    transfer_out_dealer_id BIGINT,   " +
+                "CREATE TABLE cdc_test1 (\n" +
+                        "  id int,\n" +
+                        "  val1 STRING,\n" +
+                        "  num_val STRING,\n" +
+                        "  time_val Timestamp(3)\n" +
                         ") WITH (\n" +
                         "  'connector.type' = 'kudu',\n" +
-                        "  'kudu.masters' = '10.30.250.21:7051',\n" +
-                        "  'kudu.table' = 'rods.rods_bpm_grouphr_base_positionwork_f_kudu',\n" +
-                        "  'kudu.hash-columns' = 'id',\n" +
+                        "  'kudu.masters' = 'bdmaster-t-01:7051, bdmaster-t-02:7051',\n" +
+                        "  'kudu.table' = 'rods.cdc_test',\n" +
                         "  'kudu.primary-key-columns' = 'id'\n" +
                         ")"
         );
 
         // 用 tableSql 查询计算结果
-        tenv.executeSql("select * from t_kudu").print();
+        tenv.executeSql("select * from cdc_test1").print();
     }
 }
