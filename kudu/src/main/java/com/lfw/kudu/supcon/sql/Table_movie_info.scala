@@ -7,11 +7,11 @@ object Table_movie_info {
        |  `movie`    string,
        |  `category` string
        |)
-       |WITH (
-       |    'connector' = 'jdbc',
-       |    'lookup.cache.ttl' = '10000',
-       |    'tablename' = 'movie-info',
-       |    'url' = 'jdbc:hive2://hadoop102:10000/default'
+       |TBLPROPERTIES (
+       |    'streaming-source.enable' = 'true',
+       |    'streaming-source.partition.include' = 'latest',
+       |    'streaming-source.monitor-interval' = '12 h',
+       |    'streaming-source.partition-order' = 'partition-name'
        |)
        |""".stripMargin
 

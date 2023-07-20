@@ -4,6 +4,9 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/${project.build.directory}/classes" />
@@ -123,6 +126,10 @@
     <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:2.4.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.luben:zstd-jni:1.4.3-1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.bahir:flink-connector-redis_2.12:1.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.flink:flink-table-api-java:1.14.4" level="project" />
+    <orderEntry type="library" name="Maven: redis.clients:jedis:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.11.1" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20220320" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-elasticsearch7_2.12:1.14.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-elasticsearch-base_2.12:1.14.4" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch.client:elasticsearch-rest-high-level-client:7.5.1" level="project" />
@@ -205,7 +212,6 @@
     <orderEntry type="library" name="Maven: org.apache.yetus:audience-annotations:0.13.0" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.28" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-table-api-java-bridge_2.12:1.14.4" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.flink:flink-table-api-java:1.14.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-table-api-scala-bridge_2.12:1.14.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-table-api-scala_2.12:1.14.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-table-planner_2.12:1.14.4" level="project" />

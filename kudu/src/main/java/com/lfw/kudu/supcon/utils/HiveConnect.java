@@ -4,6 +4,7 @@ package com.lfw.kudu.supcon.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.SqlDialect;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.table.catalog.hive.HiveCatalog;
 
@@ -36,6 +37,7 @@ public final class HiveConnect {
         tableEnv.registerCatalog("myhive", hive);
         // set the HiveCatalog as the current catalog of the session
         tableEnv.useCatalog("myhive");
+        tableEnv.getConfig().setSqlDialect(SqlDialect.HIVE);
         this.tableEnv = tableEnv;
     }
 
@@ -47,7 +49,6 @@ public final class HiveConnect {
      */
     public void process(String sql) {
         try {
-            //tableEnv.executeSql("set 'table.sql-dialect'='hive'");
             tableEnv.executeSql(sql).print();
         } catch (Exception e) {
             log.error("this job has canceled because {}", e.getMessage());
