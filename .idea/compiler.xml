@@ -18,6 +18,7 @@
         <module name="flume" />
         <module name="kafka" />
         <module name="hdfs" />
+        <module name="realtime-dw" />
         <module name="yarn" />
         <module name="hbase" />
       </profile>
@@ -34,6 +35,7 @@
       <module name="kafka" target="8" />
       <module name="kudu" target="8" />
       <module name="mapreduce" target="8" />
+      <module name="realtime-dw" target="8" />
       <module name="scala" target="1.5" />
       <module name="spark" target="8" />
       <module name="yarn" target="8" />

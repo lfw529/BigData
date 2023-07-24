@@ -14,6 +14,7 @@
       <module fileurl="file://$PROJECT_DIR$/kafka/kafka.iml" filepath="$PROJECT_DIR$/kafka/kafka.iml" />
       <module fileurl="file://$PROJECT_DIR$/kudu/kudu.iml" filepath="$PROJECT_DIR$/kudu/kudu.iml" />
       <module fileurl="file://$PROJECT_DIR$/hadoop/mapreduce/mapreduce.iml" filepath="$PROJECT_DIR$/hadoop/mapreduce/mapreduce.iml" />
+      <module fileurl="file://$PROJECT_DIR$/realtime-dw/realtime-dw.iml" filepath="$PROJECT_DIR$/realtime-dw/realtime-dw.iml" />
       <module fileurl="file://$PROJECT_DIR$/scala/scala.iml" filepath="$PROJECT_DIR$/scala/scala.iml" />
       <module fileurl="file://$PROJECT_DIR$/spark/spark.iml" filepath="$PROJECT_DIR$/spark/spark.iml" />
       <module fileurl="file://$PROJECT_DIR$/hadoop/yarn/yarn.iml" filepath="$PROJECT_DIR$/hadoop/yarn/yarn.iml" />

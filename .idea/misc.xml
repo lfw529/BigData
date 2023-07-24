@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/hadoop/pom.xml" />
         <option value="$PROJECT_DIR$/flinkcdc/pom.xml" />
         <option value="$PROJECT_DIR$/kudu/pom.xml" />
+        <option value="$PROJECT_DIR$/realtime-dw/pom.xml" />
       </list>
     </option>
   </component>
