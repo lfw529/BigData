@@ -6,9 +6,9 @@ import org.apache.spark.{SparkConf, SparkContext}
 object WordCount {
   def main(args: Array[String]): Unit = {
     //TODO 1 创建SparkConf配置文件,并设置应用名称和运行模式
-    val conf = new SparkConf().setAppName("WordCount").setMaster("local[*]") //可以交换顺序
+    val conf: SparkConf = new SparkConf().setAppName("WordCount").setMaster("local[*]") //可以交换顺序
     //TODO 2 构建SparkConf对象，作为编程入口
-    val sc = new SparkContext(conf)
+    val sc: SparkContext = new SparkContext(conf)
     //1 加载数据源
     val lineRDD: RDD[String] = sc.textFile("spark/input/wordcount.txt")
     //2 将一行一行的单词按照空格切割, 拍平 flatMap 算子安排

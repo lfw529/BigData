@@ -23,22 +23,5 @@
         <module name="hbase" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="flink" target="8" />
-      <module name="flinkcdc" target="8" />
-      <module name="flume" target="8" />
-      <module name="hadoop" target="1.5" />
-      <module name="hbase" target="8" />
-      <module name="hdfs" target="1.5" />
-      <module name="hive" target="8" />
-      <module name="hudi" target="11.0.11" />
-      <module name="kafka" target="8" />
-      <module name="kudu" target="8" />
-      <module name="mapreduce" target="8" />
-      <module name="realtime-dw" target="8" />
-      <module name="scala" target="1.5" />
-      <module name="spark" target="8" />
-      <module name="yarn" target="8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
