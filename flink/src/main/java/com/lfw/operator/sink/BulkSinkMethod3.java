@@ -1,27 +1,19 @@
 package com.lfw.operator.sink;
 
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.ParquetWriterFactory;
-import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
+import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.OutputFileConfig;
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.DateTimeBucketAssigner;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
 import com.lfw.operator.source.MySourceFunction;
 import com.lfw.pojo.EventLog;
-import org.apache.flink.streaming.api.CheckpointingMode;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @Desc: 要把处理好的数据流，输出到文件系统（hdfs）
@@ -50,7 +42,7 @@ public class BulkSinkMethod3 {
          */
 
         // 2. 通过自己的JavaBean类，来得到一个parquetWriter
-        ParquetWriterFactory<EventLog> parquetWriterFactory = ParquetAvroWriters.forReflectRecord(EventLog.class);
+        ParquetWriterFactory<EventLog> parquetWriterFactory = AvroParquetWriters.forReflectRecord(EventLog.class);
 
         // 3. 利用生成好的parquetWriter，来构造一个 支持列式输出parquet文件的 sink算子
         FileSink<EventLog> bulkSink = FileSink.forBulkFormat(new Path(path1), parquetWriterFactory)

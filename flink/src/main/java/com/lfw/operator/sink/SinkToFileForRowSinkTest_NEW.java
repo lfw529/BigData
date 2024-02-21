@@ -3,6 +3,7 @@ package com.lfw.operator.sink;
 import com.lfw.operator.source.ClickSource;
 import com.lfw.pojo.Event;
 import org.apache.flink.api.common.serialization.SimpleStringEncoder;
+import org.apache.flink.configuration.MemorySize;
 import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.CheckpointingMode;
@@ -13,6 +14,7 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
 
 import java.io.File;
+import java.time.Duration;
 
 public class SinkToFileForRowSinkTest_NEW {
     public static void main(String[] args) throws Exception {
@@ -34,11 +36,11 @@ public class SinkToFileForRowSinkTest_NEW {
                 .withRollingPolicy(
                         DefaultRollingPolicy.builder()
                                 //至少包含20s的数据
-                                .withRolloverInterval(20 * 1000)
+                                .withRolloverInterval(Duration.ofSeconds(20))
                                 //最近10s没有接收到新的数据
                                 //.withInactivityInterval(TimeUnit.SECONDS.toSeconds(10))
                                 //文件大小达到 1M
-                                .withMaxPartSize(1024 * 1024)
+                                .withMaxPartSize(new MemorySize(1024 * 1024))
                                 .build())
                 //分桶的策略 (划分文件夹的策略)
                 .withBucketAssigner(new DateTimeBucketAssigner<String>())

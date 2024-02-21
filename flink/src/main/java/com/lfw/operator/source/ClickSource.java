@@ -6,6 +6,9 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import java.util.Calendar;
 import java.util.Random;
 
+/**
+ * 数据生成器
+ */
 public class ClickSource implements SourceFunction<Event> {
     // 声明一个布尔变量，作为控制数据生成的标志位
     private Boolean running = true;

@@ -7,7 +7,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.ParquetWriterFactory;
-import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
+import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -46,7 +46,7 @@ public class BulkSinkMethod2 {
          *   - 添加maven代码生成器插件，来针对上述的avsc生成avro特定格式的JavaBean类
          *   - 利用代码生成器生成的 JavaBean，来构造一个 parquetWriterFactory
          *   - 利用parquetWriterFactory构造一个FileSink算子
-         *   - 将原始数据流 转成 特定格式JavaBean流，输出到 FileSink算子
+         *   - 将原始数据流 转成 特定格式JavaBean流，输出到 FileSink 算子
          */
 
         // 1. 先定义avsc文件放在resources文件夹中，并用maven的插件，来编译一下，生成特定格式的JavaBean ： AvroEventLog
@@ -55,7 +55,7 @@ public class BulkSinkMethod2 {
         // Schema schema = avroEventLog.getSchema();
 
         // 2. 通过自动生成 AvroEventLog类，来得到一个parquetWriter
-        ParquetWriterFactory<AvroEventLogBean> parquetWriterFactory = ParquetAvroWriters.forSpecificRecord(AvroEventLogBean.class);
+        ParquetWriterFactory<AvroEventLogBean> parquetWriterFactory = AvroParquetWriters.forSpecificRecord(AvroEventLogBean.class);
 
         // 3. 利用生成好的parquetWriter，来构造一个 支持列式输出parquet文件的 sink算子
         FileSink<AvroEventLogBean> bulkSink = FileSink.forBulkFormat(new Path(path1), parquetWriterFactory)
@@ -65,7 +65,7 @@ public class BulkSinkMethod2 {
                 .build();
 
 
-        // 4. 将自定义javabean的 EventLog 流，转成 上述sink算子中parquetWriter所需要的  AvroEventLog 流
+        // 4. 将自定义javabean的 EventLog 流，转成 上述sink算子中parquetWriter所需要的 AvroEventLog 流
         SingleOutputStreamOperator<AvroEventLogBean> avroEventLogStream = streamSource.map(new MapFunction<EventLog, AvroEventLogBean>() {
             @Override
             public AvroEventLogBean map(EventLog eventLog) throws Exception {

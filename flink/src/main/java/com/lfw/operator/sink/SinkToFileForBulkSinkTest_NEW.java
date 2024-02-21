@@ -9,6 +9,7 @@ import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.ParquetFileFormatFactory;
 import org.apache.flink.formats.parquet.ParquetWriterFactory;
+import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -81,7 +82,7 @@ public class SinkToFileForBulkSinkTest_NEW {
 
         //2.方式2：利用Avro的规范Bean对象，来生成ParquetAvroWriter工厂
         //需要写 .avsc 文件，并根据文件生成 java 类
-        ParquetWriterFactory<AvroEventLogBean> writerFactory1 = ParquetAvroWriters.forSpecificRecord(AvroEventLogBean.class);
+        ParquetWriterFactory<AvroEventLogBean> writerFactory1 = AvroParquetWriters.forSpecificRecord(AvroEventLogBean.class);
 
         FileSink<AvroEventLogBean> parquetSink1 = FileSink
                 .forBulkFormat(new Path(path1), writerFactory1)
@@ -108,7 +109,7 @@ public class SinkToFileForBulkSinkTest_NEW {
 
         //方式3：利用Avro的规范Bean对象，来生成ParquetAvroWriter工厂
         //该方法，传入一个普通的JavaBean类，就可以自动通过反射来生成 Schema。
-        ParquetWriterFactory<EventLog> writerFactory2 = ParquetAvroWriters.forReflectRecord(EventLog.class);
+        ParquetWriterFactory<EventLog> writerFactory2 = AvroParquetWriters.forReflectRecord(EventLog.class);
 
         FileSink<EventLog> parquetSink2 = FileSink
                 .forBulkFormat(new Path(path2), writerFactory2)

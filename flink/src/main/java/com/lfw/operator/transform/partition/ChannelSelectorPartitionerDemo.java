@@ -9,7 +9,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
 
-public class ChannalSelectorPartitionerDemo {
+public class ChannelSelectorPartitionerDemo {
     public static void main(String[] args) throws Exception {
 
         Configuration conf = new Configuration();

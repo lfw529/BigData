@@ -8,7 +8,7 @@ public class SourceSequenceTest {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
-        DataStreamSource<Long> numbers = env.generateSequence(1, 100).setParallelism(3);
+        DataStreamSource<Long> numbers = env.fromSequence(1, 100).setParallelism(3);
 
         numbers.print();
 

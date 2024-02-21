@@ -10,7 +10,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.formats.avro.typeutils.GenericRecordAvroTypeInfo;
 import org.apache.flink.formats.parquet.ParquetWriterFactory;
-import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
+import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -22,6 +22,12 @@ import org.apache.flink.core.fs.Path;
 
 import java.io.File;
 
+/**
+ * 如果出现报错 org.apache.parquet.io.OutputFile.getPath()Ljava/lang/String;，
+ * 这是由于 parquet-avro 版本与 flink-parquet 中的版本不一致导致的依赖冲突
+ *  flink1.16  -->  parquet-avro 1.12.2
+ *  flink1.14  -->  parquet-avro 1.11.1
+ */
 public class BulkSinkMethod1 {
     public static void main(String[] args) throws Exception {
         String pathCk = new File("").getCanonicalPath() + "/flink/output/checkpoint";
@@ -64,7 +70,7 @@ public class BulkSinkMethod1 {
         String path1 = new File("").getCanonicalPath() + "/flink/output/bulksink/method1";
 
         // 2. 通过定义好的schema模式，来得到一个parquetWriter
-        ParquetWriterFactory<GenericRecord> writerFactory = ParquetAvroWriters.forGenericRecord(schema);
+        ParquetWriterFactory<GenericRecord> writerFactory = AvroParquetWriters.forGenericRecord(schema);
 
         // 3. 利用生成好的parquetWriter，来构造一个 支持列式输出parquet文件的 sink算子
         FileSink<GenericRecord> sink1 = FileSink.forBulkFormat(new Path(path1), writerFactory)

@@ -26,7 +26,6 @@ import java.util.Comparator;
 public class KeyedProcessTopN {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
 
         // 从自定义数据源读取数据
         SingleOutputStreamOperator<Event> eventStream = env.addSource(new ClickSource())

@@ -13,14 +13,14 @@ import java.util.HashMap;
  * 也可实现   ParallelSourceFunction 或者 RichParallelSourceFunction, 这两者都是可并行的source算子
  * <p>
  * -- 带 Rich 的，都拥有 open() ,close() ,getRuntimeContext() 方法
- * -- 带 Parallel的，都可多实例并行执行
+ * -- 带 Parallel 的，都可多实例并行执行
  **/
 public class MySourceFunction implements SourceFunction<EventLog> {
-    volatile boolean flag = true;
+    volatile boolean flag = true;  //保证可见性
 
     @Override
     public void run(SourceContext<EventLog> ctx) throws Exception {
-
+        // 如何自己造数据
         EventLog eventLog = new EventLog();
         String[] events = {"appLaunch", "pageLoad", "adShow", "adClick", "itemShare", "itemCollect", "putBack", "wakeUp", "appClose"};
         HashMap<String, String> eventInfoMap = new HashMap<>();
