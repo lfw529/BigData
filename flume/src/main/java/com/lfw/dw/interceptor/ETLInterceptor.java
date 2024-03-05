@@ -12,7 +12,6 @@ import java.util.List;
 public class ETLInterceptor implements Interceptor {
     @Override
     public void initialize() {
-
     }
 
     @Override
@@ -27,7 +26,6 @@ public class ETLInterceptor implements Interceptor {
             return null;
         }
     }
-
     @Override
     public List<Event> intercept(List<Event> events) {
         Iterator<Event> iterator = events.iterator();
@@ -46,7 +44,6 @@ public class ETLInterceptor implements Interceptor {
     }
 
     public static class Builder implements Interceptor.Builder {
-
         @Override
         public Interceptor build() {
             return new ETLInterceptor();

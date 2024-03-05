@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.apache.flume</groupId>
             <artifactId>flume-ng-core</artifactId>
-            <version>1.9.0</version>
+            <version>1.11.0</version>
             <exclusions>
                 <!--排除 guava 防止冲突-->
                 <exclusion>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.apache.flume.flume-ng-sources</groupId>
             <artifactId>flume-kafka-source</artifactId>
-            <version>1.9.0</version>
+            <version>1.11.0</version>
             <scope>provided</scope>
         </dependency>
         <!--Json 解析-->

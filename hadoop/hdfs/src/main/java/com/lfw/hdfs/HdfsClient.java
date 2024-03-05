@@ -12,9 +12,9 @@ import java.util.Arrays;
 public class HdfsClient {
     /**
      * 三个参数：
-     * 1.URI : 指定hdfs的位置，实际上就是namenode的地址
+     * 1.URI : 指定hdfs的位置，实际上就是 namenode 的地址
      * 2.Configuration : 用于添加配置
-     * 3.User : 指定操作hdfs的用户
+     * 3.User : 指定操作 hdfs 的用户
      */
     @Test
     public void testMkdirs() throws IOException, URISyntaxException, InterruptedException {
@@ -96,7 +96,7 @@ public class HdfsClient {
 
         // 1 获取文件系统
         Configuration configuration = new Configuration();
-        FileSystem fs = FileSystem.get(new URI("hdfs://hadoop102:8020"), configuration, "atguigu");
+        FileSystem fs = FileSystem.get(new URI("hdfs://hadoop102:8020"), configuration, "lfw");
 
         // 2 执行删除
         fs.delete(new Path("/xiyou"), true);
