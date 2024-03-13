@@ -1,0 +1,49 @@
+sqoop import \
+-Dmapreduce.job.queuename=root.offline \
+--connect jdbc:oracle:thin:${bpm_ip_port_db} \
+--username ${username} \
+--password ${password} \
+--delete-target-dir \
+--target-dir /tmp/ods_bpm_grouphr_contract_devicegathers_f_1d`date +%s` \
+--query "select id,version,delete_time,modify_time,create_time,delete_staff_id,modify_staff_id,create_staff_id,valid,cid,sort,trim(regexp_replace(replace(replace(replace(work_shop,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as work_shop,trim(regexp_replace(replace(replace(replace(real_provider,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as real_provider,trim(regexp_replace(replace(replace(replace(rate_progress,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as rate_progress,trim(regexp_replace(replace(replace(replace(name,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as name,is_not_device,trim(regexp_replace(replace(replace(replace(gather_type,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as gather_type,foreign_sum,device_size,device_id,trim(regexp_replace(replace(replace(replace(device_class,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as device_class,dateparama,trim(regexp_replace(replace(replace(replace(content,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as content,contarctid,chance_deviceid,chance,trim(regexp_replace(replace(replace(replace(build_type,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as build_type,trim(regexp_replace(replace(replace(replace(att_name,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as att_name,trim(regexp_replace(replace(replace(replace(att_memo,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as att_memo,actual_sum,table_info_id,erps2id,principal,devicedept,training,plan_fat,stand_hours,predays,valid_size,trim(regexp_replace(replace(replace(replace(valid_range,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as valid_range,valid_num,trim(regexp_replace(replace(replace(replace(produce_no,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as produce_no,iosize,ioff,batch_control,trim(regexp_replace(replace(replace(replace(wbs_code,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as wbs_code,trim(regexp_replace(replace(replace(replace(wbs_name,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as wbs_name,res_cost,project_fee,manage_cost,trim(regexp_replace(replace(replace(replace(charparami,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as charparami,trim(regexp_replace(replace(replace(replace(is_history,chr(10),';'),chr(13),''),chr(9),' '),' {1,}',' ')) as is_history,splitsum,issyncsap,olddevicegather,ionum,cabinetnum,estimated_effective_time,is_fat,required_effective_time from GROUPHR.CONTRACT_DEVICEGATHERS where \$CONDITIONS" \
+--mapreduce-job-name sqoop_ods_bpm_grouphr_contract_devicegathers_f_1d_${bizdate} \
+--fields-terminated-by '\t' \
+--lines-terminated-by '\n' \
+--num-mappers 4 \
+--split-by id \
+--hive-import \
+--hive-drop-import-delims \
+--hive-overwrite \
+--hive-table ods.ods_bpm_grouphr_contract_devicegathers_f_1d \
+--hive-partition-key pt_day \
+--hive-partition-value ${bizdate} \
+--null-string '' \
+--null-non-string ''
+
+
+
+sqoop eval \
+-D mapred.job.queue.name=root.offline \
+--connect jdbc:postgresql://${greenplum_ip_port_db} \
+--username ${username} \
+--password ${password} \
+--e "truncate table ads.rpd_gpn_mat_pack_cost_f;commit;";
+
+sleep 5;
+
+sqoop export \
+-D mapred.job.queue.name=root.offline \
+-Dsqoop.export.records.per.statement=10 \
+--connect jdbc:postgresql://${greenplum_ip_port_db} \
+--username ${username} \
+--password ${password} \
+--table rpd_gpn_mat_pack_cost_f \
+--export-dir /user/hive/warehouse/ads.db/rpd_gpn_mat_pack_cost_f/* \
+--mapreduce-job-name sqoop_rpd_gpn_mat_pack_cost_f_${bizdate} \
+--fields-terminated-by '\t' \
+--num-mappers 10 \
+--direct \
+--batch \
+--input-null-string '\\N'  \
+--input-null-non-string '\\N' \
+-- --schema ads;

@@ -131,7 +131,7 @@ public class ConsumerExactlyOnce {
                     // 执行偏移量更新语句
                     pstOffset.execute();
 
-                    // 提交jdbc事务
+                    // 提交jdbc事务 [手动提交]
                     conn.commit();
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -27,8 +27,11 @@ exec_freq=""
 delay=0
 help_str="Usage: -f tbl_conf -t etl_date -b back_days(default 1) -m map_num(default 1, 1-30) -x exec_freq(default every day, wn-week n in every week(w0-Sunday), dn-day n in every month)-d delay(default 0 min)"
 
+
+tbl_conf="/opt/dw/data-etl-warehouse/ods/tbl_conf/ods_order_info_inc.conf"
+etl_date=2022-06-09
 # 具体书写案例：
-# /opt/dw/data-etl-warehouse/tools/sqoop_import.sh -f /opt/dw/data-etl-warehouse/ods/tbl_conf/ods_order_info_inc.conf -t 2022-06-09 -m 10
+#/opt/dw/data-etl-warehouse/tools/sqoop_import.sh -f /opt/dw/data-etl-warehouse/ods/tbl_conf/ods_order_info_inc.conf -t 2022-06-09 -m 10
 
 #get opt 获取相关参数 按顺序切分 | getopts 行参数解析匹配函数 | $OPTARG:对应参数 | 10# 十进制
 #getopts 有两个参数，第一个参数是一个字符串，包括字符和 ":"。每一个字符都是一个有效选项(option)，如果字符后面带有":"，表示这个选项有自己的 argument，argument 保存在内置变量OPTARG中
@@ -236,16 +239,18 @@ do
 
     #sqoop 导入至tmp库
     #tmp库使用dt分区，保留最近几天的导入数据
-    echo "dump data from ${db_inst_i} ${connect_str}..."
+    echo "dump data from ${db_inst_i:0:-1} ${connect_str} ..."
+    echo ${mysql_tbl}
+    echo ${mysql_cond}
 
-    sqoop import \
+     echo sqoop import \
         -Dmapreduce.job.queuename=root.default \
         --connect ${connect_str} \
         --username ${username} \
         --password ${passwd} \
         --table "${mysql_tbl:0:-1}" \
-        --columns "${mysql_cols:0:-1}" \
-        --where "${mysql_cond:0:-1}" \
+        --columns ${mysql_cols:0:-1} \
+        --where ${mysql_cond:0:-1} \
         --hive-table ${hive_tmp_db}.${tbl_name} \
         --hive-partition-key dt \
         --hive-partition-value ${etl_date} \
@@ -268,6 +273,7 @@ do
     overwrite=""
 done
 
+
 # hive 命令将tmp库导入正式库
 # 大部分 ods 表使用 year month day 三级分区，是否分区在配置文件中设置
 year=${etl_date:0:4}                      #取年
@@ -277,16 +283,12 @@ if [ "${is_partition}" = 'true' ];then    #判断是否分区
 fi
 
 #调用 hive 执行语句
-hive -e "set hive.support.quoted.identifiers=none;
+echo "set hive.support.quoted.identifiers=none;
          insert overwrite table ${hive_db}.${tbl_name}${partition_cond}
-         select * from ${hive_tmp_db}.${tbl_name} where dt='${etl_date}'"
+         select \`(dt)?+.+\` from ${hive_tmp_db}.${tbl_name} where dt='${etl_date}'"
 
 
-#select \`(dt)?+.+\` from ${hive_tmp_db}.${tbl_name} where dt='${etl_date}'"
 
-#删除tmp库中的过期分区
-expire_date=`date -d "${etl_date} -${TMP_DB_PARTITION_KEEP} days" "+%F"`
-hive -e "ALTER TABLE ${hive_tmp_db}.${tbl_name} DROP IF EXISTS PARTITION (dt <= '${expire_date}')"
 
 ##校验 mysql 和 hive 两边数据条数
 ##get mysql conf
