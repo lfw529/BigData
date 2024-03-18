@@ -15,10 +15,10 @@
         <module name="flink" />
         <module name="mapreduce" />
         <module name="spark" />
-        <module name="flume" />
         <module name="kafka" />
-        <module name="hdfs" />
+        <module name="flume" />
         <module name="realtime-dw" />
+        <module name="hdfs" />
         <module name="yarn" />
         <module name="hbase" />
       </profile>

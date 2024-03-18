@@ -1,4 +1,4 @@
-package com.lfw.spark.serializable
+   package com.lfw.spark.serializable
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
