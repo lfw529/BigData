@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/flume/pom.xml" />
         <option value="$PROJECT_DIR$/hive/pom.xml" />
         <option value="$PROJECT_DIR$/hbase/pom.xml" />
+        <option value="$PROJECT_DIR$/flink-metrics/pom.xml" />
       </list>
     </option>
   </component>

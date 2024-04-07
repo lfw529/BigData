@@ -14,7 +14,7 @@ back_time="1d"
 #执行频率
 exec_freq=""
 
-#调度队列设置，默认default队列，根据 yarn 侧配置填写
+#调度队列设置，默认 default 队列，根据 yarn 侧配置填写
 yarn_queue="BD_OT"
 
 #延迟分钟数

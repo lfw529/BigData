@@ -20,6 +20,7 @@
         <module name="realtime-dw" />
         <module name="hdfs" />
         <module name="yarn" />
+        <module name="flink-metrics" />
         <module name="hbase" />
       </profile>
     </annotationProcessing>
