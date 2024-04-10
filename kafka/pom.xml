@@ -36,12 +36,12 @@
             <version>1.11.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer -->
-        <dependency>
-            <groupId>io.confluent</groupId>
-            <artifactId>kafka-avro-serializer</artifactId>
-            <version>7.3.1</version>   <!--注意：这里版本要大于 6.0-->
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.confluent</groupId>-->
+<!--            <artifactId>kafka-avro-serializer</artifactId>-->
+<!--            <version>7.3.1</version>   &lt;!&ndash;注意：这里版本要大于 6.0&ndash;&gt;-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
