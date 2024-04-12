@@ -1,0 +1,7 @@
+tom,18,male
+kitty,16,female
+lily,18,female
+lucy,111,female
+jerry,15,male
+shuke,17,male
+shanshan,18,female

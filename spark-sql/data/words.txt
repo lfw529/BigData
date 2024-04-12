@@ -1,0 +1,6 @@
+spark hive hadoop flink
+flink spark spark hive
+flink hadoop hive
+spark hive hadoop flink
+flink spark spark hive
+flink hadoop hive spark
