@@ -41,5 +41,5 @@ PARTITIONED BY (`dt` STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'
 NULL DEFINED AS ''
 LOCATION '/warehouse/gmall/ods/ods_cart_info_full/'
-    TBLPROPERTIES ('compression.codec'='org.apache.hadoop.io.compress.GzipCodec');
+TBLPROPERTIES ('compression.codec'='org.apache.hadoop.io.compress.GzipCodec');
 
