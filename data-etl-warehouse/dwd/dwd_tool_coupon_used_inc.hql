@@ -23,19 +23,19 @@ TBLPROPERTIES ("orc.compress" = "snappy");
 
 -- 首日装载
 set hive.exec.dynamic.partition.mode=nonstrict;
-insert overwrite table dwd.dwd_tool_coupon_used_inc partition(dt)
-select
-    data.id,
-    data.coupon_id,
-    data.user_id,
-    data.order_id,
-    date_format(data.used_time,'yyyy-MM-dd') date_id,
-    data.used_time,
-    date_format(data.used_time,'yyyy-MM-dd')
-from ods.ods_coupon_use_inc
-where dt='2022-06-08'
-  and type='bootstrap-insert'
-  and data.used_time is not null;
+-- insert overwrite table dwd.dwd_tool_coupon_used_inc partition(dt)
+-- select
+--     data.id,
+--     data.coupon_id,
+--     data.user_id,
+--     data.order_id,
+--     date_format(data.used_time,'yyyy-MM-dd') date_id,
+--     data.used_time,
+--     date_format(data.used_time,'yyyy-MM-dd')
+-- from ods.ods_coupon_use_inc
+-- where dt='2022-06-08'
+--   and type='bootstrap-insert'
+--   and data.used_time is not null;
 
 
 

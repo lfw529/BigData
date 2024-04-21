@@ -23,17 +23,17 @@ TBLPROPERTIES ("orc.compress" = "snappy");
 
 -- 首日装载
 set hive.exec.dynamic.partition.mode=nonstrict;
-insert overwrite table dwd.dwd_interaction_favor_add_inc partition(dt)
-select
-    data.id,
-    data.user_id,
-    data.sku_id,
-    date_format(data.create_time,'yyyy-MM-dd') date_id,
-    data.create_time,
-    date_format(data.create_time,'yyyy-MM-dd')
-from ods.ods_favor_info_inc
-where dt='2022-06-08'
-  and type = 'bootstrap-insert';
+-- insert overwrite table dwd.dwd_interaction_favor_add_inc partition(dt)
+-- select
+--     data.id,
+--     data.user_id,
+--     data.sku_id,
+--     date_format(data.create_time,'yyyy-MM-dd') date_id,
+--     data.create_time,
+--     date_format(data.create_time,'yyyy-MM-dd')
+-- from ods.ods_favor_info_inc
+-- where dt='2022-06-08'
+--   and type = 'bootstrap-insert';
 
 
 -- 每日装载

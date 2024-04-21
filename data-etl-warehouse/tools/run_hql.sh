@@ -25,7 +25,7 @@ delay=0
 help_str="Usage: \n-f xxx.hql \n-t etl_time \n-b back_time(default 1d, m-month d-day h-hour) \n-x exec_freq(default every day, wn-week n in every week(w0-Sunday), dn-day n in every month) \n-q yarn-queue(default BD_OT) \n-d delay(default 0 min)"
 
 # 具体书写案例：
-# /opt/dw/data-etl-warehouse/tools/run_hql.sh -f /opt/dw/data-etl-warehouse/dim/dim_sku_full.hql -t 2022-06-09
+# /opt/dw/data-etl-warehouse/tools/run_hql.sh -f /opt/dw/data-etl-warehouse/dim/dim_sku_full.hql -t 2022-06-10
 
 #默认向前推进时间单位
 back_unit="days"
@@ -194,12 +194,59 @@ fi;
 #delay 
 sleep ${delay}m
 
-hive -hiveconf mapreduce.job.queuename=${yarn_queue} \
-    -hiveconf hive.exec.reducers.max=40 \
-    -hiveconf hive.exec.reducers.bytes.per.reducer=536870912 \
-    -hiveconf mapred.job.reuse.jvm.num.tasks=8 \
-    -hiveconf mapreduce.input.fileinputformat.split.minsize=33554432 \
-    -hiveconf current_date=${current_date} \
+# # MR 引擎
+# hive -hiveconf mapreduce.job.queuename=${yarn_queue} \
+#     -hiveconf hive.exec.reducers.max=40 \
+#     -hiveconf hive.exec.reducers.bytes.per.reducer=536870912 \
+#     -hiveconf mapred.job.reuse.jvm.num.tasks=8 \
+#     -hiveconf mapreduce.input.fileinputformat.split.minsize=33554432 \
+#     -hiveconf current_date=${current_date} \
+#     -hiveconf etl_time=${etl_time} \
+#     -hiveconf etl_date=${etl_date} \
+#     -hiveconf rpt_date=${rpt_date} \
+#     -hiveconf year=${year} \
+#     -hiveconf month=${month} \
+#     -hiveconf hour=${hour} \
+#     -hiveconf next_one_hour=${next_one_hour} \
+#     -hiveconf next_two_hour=${next_two_hour} \
+#     -hiveconf next_two_hour_day=${next_two_hour_day} \
+#     -hiveconf next_two_hour_year=${next_two_hour_year} \
+#     -hiveconf next_two_hour_month=${next_two_hour_month} \
+#     -hiveconf last_six_hour=${last_six_hour} \
+#     -hiveconf last_six_hour_day=${last_six_hour_day} \
+#     -hiveconf last_six_hour_month=${last_six_hour_month} \
+#     -hiveconf last_six_hour_year=${last_six_hour_year} \
+#     -hiveconf simple_month=${simple_month} \
+#     -hiveconf simple_date=${simple_date} \
+#     -hiveconf last_one_hour=${last_one_hour}\
+#     -hiveconf last_day=${last_day} \
+#     -hiveconf last_day_year=${last_day_year} \
+#     -hiveconf last_day_month=${last_day_month} \
+#     -hiveconf last_month=${last_month} \
+#     -hiveconf tomorrow=${tomorrow} \
+#     -hiveconf tomorrow_year=${tomorrow_year} \
+#     -hiveconf tomorrow_month=${tomorrow_month} \
+#     -hiveconf two_days_ago=${two_days_ago} \
+#     -hiveconf seven_days_ago=${seven_days_ago} \
+#     -hiveconf three_days_ago=${three_days_ago} \
+#     -hiveconf eight_days_ago=${eight_days_ago} \
+#     -hiveconf fourteen_days_ago=${fourteen_days_ago} \
+#     -hiveconf thirty_days_ago=${thirty_days_ago} \
+#     -hiveconf sixty_days_ago=${sixty_days_ago} \
+#     -hiveconf ninety_days_ago=${ninety_days_ago} \
+#     -hiveconf etl_date_no_hyphen=${etl_date_no_hyphen} \
+#     -hiveconf etl_date_no_hyphen_y=${etl_date_no_hyphen_y} \
+#     -hiveconf last_day_no_hyphen=${last_day_no_hyphen} \
+#     -hiveconf month_no_hyphen=${month_no_hyphen} \
+#     -hiveconf first_day_of_month=${first_day_of_month} \
+#     -hiveconf last_day_of_last_month=${last_day_of_last_month} \
+#     -hiveconf week_day=${week_day} \
+#     -hiveconf retire_day=${retire_day} \
+#     -hiveconf last_one_hour_day=${last_one_hour_day} \
+#     -f ${hive_script}
+
+# hive on spark
+hive -hiveconf current_date=${current_date} \
     -hiveconf etl_time=${etl_time} \
     -hiveconf etl_date=${etl_date} \
     -hiveconf rpt_date=${rpt_date} \

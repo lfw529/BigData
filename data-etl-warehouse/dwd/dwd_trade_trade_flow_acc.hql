@@ -1,5 +1,5 @@
 -- DROP TABLE IF EXISTS dwd.dwd_trade_trade_flow_acc;
-CREATE EXTERNAL TABLE dwd.dwd_trade_trade_flow_acc
+CREATE EXTERNAL TABLE if not exists dwd.dwd_trade_trade_flow_acc
 (
     `order_id`              STRING COMMENT '订单ID',
     `user_id`               STRING COMMENT '用户ID',
@@ -31,58 +31,58 @@ TBLPROPERTIES ('orc.compress' = 'snappy');
 
 -- 首日装载
 set hive.exec.dynamic.partition.mode=nonstrict;
-insert overwrite table dwd.dwd_trade_trade_flow_acc partition(dt)
-select
-    oi.id,
-    user_id,
-    province_id,
-    date_format(create_time,'yyyy-MM-dd'),
-    create_time,
-    date_format(callback_time,'yyyy-MM-dd'),
-    callback_time,
-    date_format(finish_time,'yyyy-MM-dd'),
-    finish_time,
-    original_total_amount,
-    activity_reduce_amount,
-    coupon_reduce_amount,
-    total_amount,
-    nvl(payment_amount,0.0),
-    nvl(date_format(finish_time,'yyyy-MM-dd'),'9999-12-31')
-from
-(
-    select
-        data.id,
-        data.user_id,
-        data.province_id,
-        data.create_time,
-        data.original_total_amount,
-        data.activity_reduce_amount,
-        data.coupon_reduce_amount,
-        data.total_amount
-    from ods.ods_order_info_inc
-    where dt='2022-06-08' and type='bootstrap-insert'
-)oi
-left join
-(
-    select
-        data.order_id,
-        data.callback_time,
-        data.total_amount payment_amount
-    from ods.ods_payment_info_inc
-    where dt='2022-06-08'
-      and type='bootstrap-insert'
-      and data.payment_status='1602'
-)pi on oi.id=pi.order_id
-left join
-(
-    select
-        data.order_id,
-        data.create_time finish_time
-    from ods.ods_order_status_log_inc
-    where dt='2022-06-08'
-      and type='bootstrap-insert'
-      and data.order_status='1004'
-)log on oi.id=log.order_id;
+-- insert overwrite table dwd.dwd_trade_trade_flow_acc partition(dt)
+-- select
+--     oi.id,
+--     user_id,
+--     province_id,
+--     date_format(create_time,'yyyy-MM-dd'),
+--     create_time,
+--     date_format(callback_time,'yyyy-MM-dd'),
+--     callback_time,
+--     date_format(finish_time,'yyyy-MM-dd'),
+--     finish_time,
+--     original_total_amount,
+--     activity_reduce_amount,
+--     coupon_reduce_amount,
+--     total_amount,
+--     nvl(payment_amount,0.0),
+--     nvl(date_format(finish_time,'yyyy-MM-dd'),'9999-12-31')
+-- from
+-- (
+--     select
+--         data.id,
+--         data.user_id,
+--         data.province_id,
+--         data.create_time,
+--         data.original_total_amount,
+--         data.activity_reduce_amount,
+--         data.coupon_reduce_amount,
+--         data.total_amount
+--     from ods.ods_order_info_inc
+--     where dt='2022-06-08' and type='bootstrap-insert'
+-- )oi
+-- left join
+-- (
+--     select
+--         data.order_id,
+--         data.callback_time,
+--         data.total_amount payment_amount
+--     from ods.ods_payment_info_inc
+--     where dt='2022-06-08'
+--       and type='bootstrap-insert'
+--       and data.payment_status='1602'
+-- )pi on oi.id=pi.order_id
+-- left join
+-- (
+--     select
+--         data.order_id,
+--         data.create_time finish_time
+--     from ods.ods_order_status_log_inc
+--     where dt='2022-06-08'
+--       and type='bootstrap-insert'
+--       and data.order_status='1004'
+-- )log on oi.id=log.order_id;
 
 
 -- 每日装载

@@ -10,23 +10,22 @@ public class FlinkCDC_Table {
         env.setParallelism(1);
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
 
-        //2.创建Flink-MySQL-CDC的Source
-        tableEnv.executeSql("CREATE TABLE test01 (" +
-                "  id STRING," +
-                "  name STRING," +
-                "  sex STRING," +
-                "  primary key(id) not enforced" +
-                ") WITH (" +
-                "  'connector' = 'mysql-cdc'," +
-                "  'hostname' = 'hadoop102'," +
-                "  'port' = '3306'," +
-                "  'username' = 'root'," +
-                "  'password' = '1234'," +
-                "  'database-name' = 'flink-cdc'," +
-                "  'table-name' = 'test01'" +
+        //2.使用 flinkcdc sql 方式建表
+        tableEnv.executeSql("create table t1 (\n" +
+                "id string primary key not enforced,\n" +
+                "name string\n" +
+                ")\n" +
+                "with ( \n" +
+                "'connector' = 'mysql-cdc',\n" +
+                "'hostname' = 'hadoop102',\n" +
+                "'port' = '3306',\n" +
+                "'username' = 'root',\n" +
+                "'password' = '1234',\n" +
+                "'database-name' = 'flinkcdc',\n" +
+                "'table-name' = 't1'\n" +
                 ")");
 
-        tableEnv.executeSql("select * from test01").print();
+        tableEnv.executeSql("select * from t1").print();
 
         env.execute();
     }
