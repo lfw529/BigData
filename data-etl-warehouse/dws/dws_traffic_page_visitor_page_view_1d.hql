@@ -15,6 +15,13 @@ LOCATION '/warehouse/gmall/dws/dws_traffic_page_visitor_page_view_1d'
 TBLPROPERTIES ('orc.compress' = 'snappy');
 
 
+--SQL--
+-- ********************************************************************
+-- Author: lfw
+-- CreateTime: 2023-10-04 18:01:52
+-- Comment: dws层-流量域访客页面粒度页面浏览最近1日汇总表
+-- ********************************************************************
+
 insert overwrite table dws.dws_traffic_page_visitor_page_view_1d partition(dt='${hiveconf:etl_date}')
 select
     mid_id,

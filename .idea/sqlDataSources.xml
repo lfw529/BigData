@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="e4f3fe20-a89f-4db4-904c-aac8f840c259" name="hive Mapping">
+      <data-sources db="2b7d8eaa-f287-4084-9271-fb502a9c3373" ddl="5f82496d-8302-4f82-870e-d625f14d8cdc" />
+      <scope>
+        <node kind="database" negative="1">
+          <node kind="schema" negative="1" />
+        </node>
+      </scope>
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="5f82496d-8302-4f82-870e-d625f14d8cdc" />
+          <option name="name" value="hive" />
+          <option name="dbmsName" value="HIVE" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/data-etl-warehouse" />
+            </array>
+          </option>
+          <option name="outLayout" value="File per object by schema and database.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
