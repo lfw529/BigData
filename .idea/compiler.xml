@@ -12,6 +12,7 @@
         <module name="scala" />
         <module name="flinkcdc" />
         <module name="kudu" />
+        <module name="es" />
         <module name="flink" />
         <module name="mapreduce" />
         <module name="spark" />

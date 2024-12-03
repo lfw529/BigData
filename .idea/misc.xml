@@ -18,6 +18,7 @@
         <option value="$PROJECT_DIR$/hbase/pom.xml" />
         <option value="$PROJECT_DIR$/flink-metrics/pom.xml" />
         <option value="$PROJECT_DIR$/spark-sql/pom.xml" />
+        <option value="$PROJECT_DIR$/es/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,0 +1,1 @@
+<logger name="org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager" level="DEBUG"/>
