@@ -9,6 +9,8 @@
     <file url="file://$PROJECT_DIR$/flinkcdc/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hudi/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hudi/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/paimon/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/paimon/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/realtime-dw/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/realtime-dw/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spark-sql/src/main/java" charset="UTF-8" />

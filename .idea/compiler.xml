@@ -14,6 +14,7 @@
         <module name="kudu" />
         <module name="es" />
         <module name="flink" />
+        <module name="paimon" />
         <module name="mapreduce" />
         <module name="spark" />
         <module name="kafka" />
