@@ -37,15 +37,15 @@ public class CatalogUtil {
         //指定Hive的MateStore服务的地址
         options.set("uri", "thrift://192.168.10.101:9083");
         //指定Hive的配置文件
-        options.set("hive-conf-dir", "/Users/star/IdeaProjects/paimon-in-action/src/main/resources");
+        options.set("hive-conf-dir", "E:\\IdeaProjects\\bigdata\\paimon\\src\\main\\resources");
         //options.set("hadoop-conf-dir", "...");
         CatalogContext context = CatalogContext.create(options);
         return CatalogFactory.createCatalog(context);
     }
 
     public static void main(String[] args) throws Exception {
-        System.setProperty("HADOOP_USER_NAME", "root");
-        //Catalog catalog = createFilesystemCatalog();
+        System.setProperty("HADOOP_USER_NAME", "lfw");
+//        Catalog catalog = createFilesystemCatalog();
         Catalog catalog = createHiveCatalog();
         //创建Database
         catalog.createDatabase("lfw", true);

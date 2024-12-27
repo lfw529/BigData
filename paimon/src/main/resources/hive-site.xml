@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://192.168.10.101:3306/metastore?createDatabaseIfNotExist=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>root</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>1234</value>
+  </property>
+  <!-- hive在hdfs中存储的数据路径 -->
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>/user/hive/warehouse</value>
+  </property>
+  <!-- hive工作的时候的一个临时目录 -->
+  <property>
+    <name>hive.exec.scratchdir</name>
+    <value>/user/hive/tmp</value>
+  </property>
+  <!-- hive工作时候的日志存储目录 -->
+  <property>
+    <name>hive.querylog.location</name>
+    <value>/user/hive/log</value>
+  </property>
+  <property>
+    <name>hive.server2.thrift.port</name>
+    <value>10000</value>
+  </property>
+  <property>
+    <name>hive.server2.thrift.bind.host</name>
+    <value>0.0.0.0</value>
+  </property>
+  <property>
+    <name>hive.server2.webui.host</name>
+    <value>0.0.0.0</value>
+  </property>
+  <property>
+    <name>hive.server2.webui.port</name>
+    <value>10002</value>
+  </property>
+  <property>
+    <name>hive.server2.enable.doAs</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>datanucleus.autoCreateSchema</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>hive.execution.engine</name>
+    <value>mr</value>
+  </property>
+  <property>
+    <name>hive.metastore.port</name>
+    <value>9083</value>
+  </property>
+  <property>
+    <name>hive.exec.post.hooks</name>
+    <value>org.apache.atlas.hive.hook.HiveHook</value> 
+  </property>
+</configuration>
+
